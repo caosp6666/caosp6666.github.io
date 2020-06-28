@@ -5,13 +5,17 @@
   
 
   
-  <title>Hexo</title>
+  <title>从0开始Hexo博客搭建 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="1.安装Node.js官网下载安装即可 123456# 安装后查看版本C:\Users\username&gt;node -vv10.16.3C:\Users\username&gt;npm -v6.14.4  2.配置淘宝cnpm镜像源npm install -g cnpm --registry&#x3D;&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org 再通过cnpm -v查看是否配置成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从0开始Hexo博客搭建">
+<meta property="og:url" content="http://yoursite.com/2020/06/28/%E4%BB%8E0%E5%BC%80%E5%A7%8BHexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.安装Node.js官网下载安装即可 123456# 安装后查看版本C:\Users\username&gt;node -vv10.16.3C:\Users\username&gt;npm -v6.14.4  2.配置淘宝cnpm镜像源npm install -g cnpm --registry&#x3D;&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org 再通过cnpm -v查看是否配置成">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-28T08:27:43.199Z">
+<meta property="article:modified_time" content="2020-06-28T08:27:26.397Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -62,9 +66,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-从0开始Hexo博客搭建" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-从0开始Hexo博客搭建" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/28/%E4%BB%8E0%E5%BC%80%E5%A7%8BHexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="article-date">
   <time datetime="2020-06-28T08:27:43.199Z" itemprop="datePublished">2020-06-28</time>
@@ -77,8 +79,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/28/%E4%BB%8E0%E5%BC%80%E5%A7%8BHexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">从0开始Hexo博客搭建</a>
+    <h1 class="article-title" itemprop="name">
+      从0开始Hexo博客搭建
     </h1>
   
 
@@ -132,159 +134,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-Typora图床配置" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/28/Typora%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE/" class="article-date">
-  <time datetime="2020-06-28T07:41:18.519Z" itemprop="datePublished">2020-06-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/28/Typora%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE/">Typora图床配置</a>
-    </h1>
+    <a href="/2020/06/28/Typora%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Typora图床配置</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="图床是什么"><a href="#图床是什么" class="headerlink" title="图床是什么"></a>图床是什么</h2><blockquote>
-<p>图床即储存图片的服务器。</p>
-</blockquote>
-<p>Markdown的本质是对html的解析，于是就存在内置图片的来源问题。在本地编写的md文件，可以插入本地的图片，或者配置远程url。而想讲文章发布到博客给别人看就必须把本地图片上传到图床，再把生成的url复制到文章中（如果图片多，会是一个很耗时耗力的过程）</p>
-<p>==新版Typora，拥有了自动上传的功能==</p>
-<h2 id="操作过程"><a href="#操作过程" class="headerlink" title="操作过程"></a>操作过程</h2><ol>
-<li><p><strong>前置要求</strong></p>
-<ul>
-<li>typora的版本在<code>0.9.86</code>以上</li>
-<li>在<a href="https://sm.ms" target="_blank" rel="noopener">sm.ms</a>上注册账号</li>
-<li>在<a href="https://sm.ms/home/apitoken" target="_blank" rel="noopener">https://sm.ms/home/apitoken</a> 页面生成自己的token</li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/28/5krtWb7qERU4oTJ.png" alt="image-20200628150844856"></p>
-</li>
-<li><p><strong>进入Typora的偏好设置</strong></p>
-<p><img src="https://i.loli.net/2020/06/28/HWfi1qE7ZuUCs56.png" alt="image-20200628153535654"></p>
-<p>依次点击方框中的内容</p>
-</li>
-<li><p><strong>打开配置文件</strong></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"picBed"</span>: &#123;</span><br><span class="line">    <span class="attr">"uploader"</span>: <span class="string">"smms"</span>,  <span class="comment">//代表当前图床配置为smms</span></span><br><span class="line">    <span class="attr">"smms"</span>: &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"你自己的token"</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"picgoPlugins"</span>: &#123;&#125; 	<span class="comment">//预留插件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>保存并退出</p>
-</li>
-<li><p><strong>点击上图的验证图片上传选项</strong></p>
-<p><img src="https://i.loli.net/2020/06/28/RQcjS9DIrg1bzoP.png" alt="image-20200628151242099"></p>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/28/Typora%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE/" data-id="ckbytad3n0001fovne7li1hca" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-起点" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/28/%E8%B5%B7%E7%82%B9/" class="article-date">
-  <time datetime="2020-06-28T07:00:14.000Z" itemprop="datePublished">2020-06-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/28/%E8%B5%B7%E7%82%B9/">起点</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/28/%E8%B5%B7%E7%82%B9/" data-id="ckbytad3s0002fovn8fak16ip" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/28/hello-world/" class="article-date">
-  <time datetime="2020-06-28T06:43:04.313Z" itemprop="datePublished">2020-06-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/28/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/28/hello-world/" data-id="ckbytad3b0000fovnende05ff" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         
