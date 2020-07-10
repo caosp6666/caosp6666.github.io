@@ -20,28 +20,37 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"8.0.0-rc.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Albert Cao&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="[toc] 概述 docker为什么出现？  从开发到运维，两套环境，导致部署困难，尤其是环境变多的时候（redis &#x2F; mysql &#x2F; elasticsearch &#x2F; …) 集群化的配置和启动更加费劲，在敏捷开发下的迭代中对运维要求过高。 解决思路：将项目和环境打包，直接部署使用——开发即运维 Docker的核心思想来自于集装箱，即隔离。通过隔离，Docker可以把服务器性能发挥到极致  Doc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 01 概述与常用命令“">
+<meta property="og:url" content="http://yoursite.com/2020/07/10/Docker-01-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
 <meta property="og:site_name" content="Albert Cao&#39;s Blog">
+<meta property="og:description" content="[toc] 概述 docker为什么出现？  从开发到运维，两套环境，导致部署困难，尤其是环境变多的时候（redis &#x2F; mysql &#x2F; elasticsearch &#x2F; …) 集群化的配置和启动更加费劲，在敏捷开发下的迭代中对运维要求过高。 解决思路：将项目和环境打包，直接部署使用——开发即运维 Docker的核心思想来自于集装箱，即隔离。通过隔离，Docker可以把服务器性能发挥到极致  Doc">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/07/08/Bz3QeZbRTMO9DCv.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/07/08/WZ8CfENmjTlr5hX.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/08/k7xg8aUY1wur3Cv.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/09/5TAQpC49IFu8hUr.png">
+<meta property="article:published_time" content="2020-07-10T02:29:40.000Z">
+<meta property="article:modified_time" content="2020-07-10T02:30:29.899Z">
 <meta property="article:author" content="Albert Cao">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/07/08/Bz3QeZbRTMO9DCv.jpg">
 
-<link rel="canonical" href="http://yoursite.com/">
+<link rel="canonical" href="http://yoursite.com/2020/07/10/Docker-01-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Albert Cao's Blog</title>
+  <title>Docker 01 概述与常用命令“ | Albert Cao's Blog</title>
   
 
 
@@ -156,7 +165,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -168,6 +177,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Docker"><span class="nav-number">2.</span> <span class="nav-text">安装Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker常用命令"><span class="nav-number">3.</span> <span class="nav-text">Docker常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看信息"><span class="nav-number">3.1.</span> <span class="nav-text">查看信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#镜像命令"><span class="nav-number">3.2.</span> <span class="nav-text">镜像命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器命令"><span class="nav-number">3.3.</span> <span class="nav-text">容器命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令总结"><span class="nav-number">3.4.</span> <span class="nav-text">命令总结</span></a></li></ol></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -220,9 +230,10 @@
       <div class="main-inner">
         
 
-        <div class="content index posts-expand">
+        <div class="content post posts-expand">
           
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -238,10 +249,9 @@
       <meta itemprop="name" content="Albert Cao's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/07/10/Docker-01-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">Docker 01 概述与常用命令“</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Docker 01 概述与常用命令“
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -265,7 +275,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>[toc]</p>
+        <p>[toc]</p>
 <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><blockquote>
 <p>docker为什么出现？</p>
 </blockquote>
@@ -379,335 +389,30 @@
 </ul>
 <h3 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h3><p><img src="https://i.loli.net/2020/07/09/5TAQpC49IFu8hUr.png" alt="image-20200709101939919"></p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/30/%E6%96%B0%E6%89%8B%E5%90%91%E2%80%94%E2%80%94%E5%A6%82%E4%BD%95%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E5%8F%91%E5%B8%83%E5%88%B0GitHub/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Albert Cao">
-      <meta itemprop="description" content="">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Albert Cao's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/30/%E6%96%B0%E6%89%8B%E5%90%91%E2%80%94%E2%80%94%E5%A6%82%E4%BD%95%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E5%8F%91%E5%B8%83%E5%88%B0GitHub/" class="post-title-link" itemprop="url">新手向——如何将本地项目发布到GitHub</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-06-30 10:51:12 / Modified: 10:52:21" itemprop="dateCreated datePublished" datetime="2020-06-30T10:51:12+08:00">2020-06-30</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h2><p>首先在GitHub建立一个new repository</p>
-<p><img src="https://i.loli.net/2020/06/30/odBOKCwhZ758cmL.png" alt="image-20200630095434097"></p>
-<p>新建一个文件夹，在文件夹中右键<code>git bash here</code></p>
-<p>初始化<code>git init</code></p>
-<p>将已有的项目文件复制到这里，然后查看<code>git status</code></p>
-<p><img src="https://i.loli.net/2020/06/30/oNVP9FxS2jvRfiz.png" alt="image-20200630102832010"></p>
-<p>将所有文件添加到git仓库<code>git add .</code></p>
-<p>进行提交<code>git commit -m &quot;first commit&quot;</code></p>
-<p>（插曲：配置Github的SSH登陆）</p>
-<p>将GitHub仓库与本地仓库关联：</p>
-<p><code>git remote add origin https://github.com/caosp6666/Dream-OnlineCourse.git</code></p>
-<p>你新创建的那个仓库里面的README文件不在本地仓库目录中</p>
-<p>通过<code>git pull --rebase origin master</code>进行合并</p>
-<p><img src="https://i.loli.net/2020/06/30/7Ty3WcsufrIqYEw.png" alt="image-20200630104850200"></p>
-<p>再将项目推到远端<code>git push -u origin master</code> （后面的改动不需要-u）</p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/30/%E6%96%B0%E6%89%8B%E5%90%91%E2%80%94%E2%80%94%E5%A6%82%E4%BD%95%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E5%8F%91%E5%B8%83%E5%88%B0GitHub/" rel="prev" title="新手向——如何将本地项目发布到GitHub">
+      <i class="fa fa-chevron-left"></i> 新手向——如何将本地项目发布到GitHub
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/28/%E4%BB%8E0%E5%BC%80%E5%A7%8BHexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Albert Cao">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Albert Cao's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/28/%E4%BB%8E0%E5%BC%80%E5%A7%8BHexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">从0开始Hexo博客搭建</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-06-28 16:27:43 / Modified: 17:18:43" itemprop="dateCreated datePublished" datetime="2020-06-28T16:27:43+08:00">2020-06-28</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-安装Node-js"><a href="#1-安装Node-js" class="headerlink" title="1.安装Node.js"></a>1.安装Node.js</h2><p>官网下载安装即可</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装后查看版本</span></span><br><span class="line">C:\Users\username&gt;node -v</span><br><span class="line">v10.16.3</span><br><span class="line"></span><br><span class="line">C:\Users\username&gt;npm -v</span><br><span class="line">6.14.4</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-配置淘宝cnpm镜像源"><a href="#2-配置淘宝cnpm镜像源" class="headerlink" title="2.配置淘宝cnpm镜像源"></a>2.配置淘宝cnpm镜像源</h2><p><code>npm install -g cnpm --registry==https://registry.npm.taobao.org</code></p>
-<p>再通过<code>cnpm -v</code>查看是否配置成功</p>
-<h2 id="3-安装hexo-cli"><a href="#3-安装hexo-cli" class="headerlink" title="3.安装hexo-cli"></a>3.安装hexo-cli</h2><p><code>cnpm install -g hexo-cli</code></p>
-<p>再通过<code>hexo -v</code>查看是否安装成功</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\username&gt;hexo -v</span><br><span class="line">hexo-cli: 3.1.0</span><br><span class="line">os: Windows_NT 10.0.18362 win32 x64</span><br><span class="line">http_parser: 2.8.0</span><br><span class="line">node: 10.16.3</span><br><span class="line">v8: 6.8.275.32-node.54</span><br><span class="line">uv: 1.28.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.7</span><br><span class="line">ares: 1.15.0</span><br><span class="line">modules: 64</span><br><span class="line">nghttp2: 1.39.2</span><br><span class="line">napi: 4</span><br><span class="line">openssl: 1.1.1c</span><br><span class="line">icu: 64.2</span><br><span class="line">unicode: 12.1</span><br><span class="line">cldr: 35.1</span><br><span class="line">tz: 2019a</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-hexo-init！"><a href="#4-hexo-init！" class="headerlink" title="4.hexo init！"></a>4.hexo init！</h2><p>首先创建一个Myblog文件夹（之后所有相关文件都会在这里，不用的时候直接全部删掉即可）并进入目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">D:\myblog&gt;hexo init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要下载，这里最好翻墙，不然会很慢</span></span><br><span class="line">INFO  Start blogging with Hexo!</span><br><span class="line"></span><br><span class="line"><span class="comment"># 完成后查看文件夹内容</span></span><br><span class="line">D:\myblog&gt;dir</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          .</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          ..</span><br><span class="line">2020/06/28  14:43                71 .gitignore</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          node_modules</span><br><span class="line">2020/06/28  14:43            74,898 package-lock.json</span><br><span class="line">2020/06/28  14:43               602 package.json</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          scaffolds</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          <span class="built_in">source</span></span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          themes</span><br><span class="line">2020/06/28  14:43             2,468 _config.yml  <span class="comment"># 配置文件</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="5-初步使用"><a href="#5-初步使用" class="headerlink" title="5. 初步使用"></a>5. 初步使用</h2><p>启动博客服务器<code>hexo s</code>-&gt; 访问<code>localhost:4000</code>即可看到hexo的初始化页面，默认创建了一篇helloworld文章。（这个命令通常是作为博客写文章后预览使用）</p>
-<p>进入<code>D:\myblog\source\_posts</code>目录即可看到这个文章的markdown文件。</p>
-<p>下面创建自己的第一篇文章<code>hexo n &quot;起点&quot;</code> 此时_posts目录中就生成了一个新的.md文件。然后编辑这个文件即可写文章了。写好保存后，在==blog目录==运行以下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean	<span class="comment"># 清理数据库</span></span><br><span class="line">hexo g		<span class="comment"># 重新生成静态文件</span></span><br><span class="line">hexo s		<span class="comment"># 重新启动</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="6-部署到Github"><a href="#6-部署到Github" class="headerlink" title="6. 部署到Github"></a>6. 部署到Github</h2><ol>
-<li><p>在github上建立一个新仓库，命名为<code>username.github.io</code>  （必须这样命名！）其他选项默认即可</p>
-</li>
-<li><p>在blog目录中打开命令行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装一个部署插件</span></span><br><span class="line">npm install --save hexo-deployer-git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看以下当前目录下已经安装的npm包</span></span><br><span class="line">npm ls -depth 0</span><br><span class="line">hexo-site@0.0.0 D:\myblog</span><br><span class="line">+-- hexo@4.2.1</span><br><span class="line">+-- hexo-deployer-git@2.1.0</span><br><span class="line">+-- hexo-generator-archive@1.0.0</span><br><span class="line">+-- hexo-generator-category@1.0.0</span><br><span class="line">+-- hexo-generator-index@1.0.0</span><br><span class="line">+-- hexo-generator-tag@1.0.0</span><br><span class="line">+-- hexo-renderer-ejs@1.0.0</span><br><span class="line">+-- hexo-renderer-marked@2.0.0</span><br><span class="line">+-- hexo-renderer-stylus@1.1.0</span><br><span class="line">`-- hexo-server@1.0.0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改配置文件_config.yml</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 找到文件末尾</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">https://github.com/username/username.github.io.git</span></span><br><span class="line">  <span class="comment"># 这里是刚刚生成仓库的地址</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>回到blog下的命令行执行<code>hexo d</code> 即可完成部署</p>
-</li>
-<li><p>访问  <code>username.github.io</code> 测试</p>
-</li>
-</ol>
-<h2 id="7-开始blog之路"><a href="#7-开始blog之路" class="headerlink" title="7. 开始blog之路"></a>7. 开始blog之路</h2><p>以后写新博文时候进行以下操作即可</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hexo n article_name		<span class="comment"># 新建文件（也可以直接将写好的文章放到_posts文件夹中）</span></span><br><span class="line">						<span class="comment"># 对文件的更新和修改也可以在_posts文件夹中直接更改</span></span><br><span class="line">hexo clean		<span class="comment"># 刷新数据库</span></span><br><span class="line">hexo g			<span class="comment"># 重新生成静态文件</span></span><br><span class="line">hexo s			<span class="comment"># 本地测试</span></span><br><span class="line">hexo d			<span class="comment"># 部署到远端</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="8-主题更换"><a href="#8-主题更换" class="headerlink" title="8. 主题更换"></a>8. 主题更换</h2><p>选择了GitHub上star最多的一个主题<code>next</code>，项目地址： <a href="https://github.com/next-theme/hexo-theme-next" target="_blank" rel="noopener">next</a></p>
-<p>在blog目录下，执行<code>D:\myblog&gt;git clone https://github.com/next-theme/hexo-theme-next.git themes/next</code> 便将主题下载到了themes文件夹下</p>
-<p>然后修改<code>_config.yml</code> 文件中的theme为<code>next</code>  再重新部署即可</p>
-<p>主题的配置请参考主题项目的Document</p>
-<h2 id="参考与引用"><a href="#参考与引用" class="headerlink" title="参考与引用"></a>参考与引用</h2><p><a href="http://www.codesheep.cn" target="_blank" rel="noopener">www.codesheep.cn</a></p>
-<p><a href="https://theme-next.js.org/" target="_blank" rel="noopener">https://theme-next.js.org/</a></p>
-<p>有任何问题指出请邮件<a href="mailto:caosp6666@163.com">caosp6666@163.com</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/28/Typora%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Albert Cao">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Albert Cao's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/28/Typora%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">Typora图床配置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-06-28 15:41:18 / Modified: 15:44:12" itemprop="dateCreated datePublished" datetime="2020-06-28T15:41:18+08:00">2020-06-28</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="图床是什么"><a href="#图床是什么" class="headerlink" title="图床是什么"></a>图床是什么</h2><blockquote>
-<p>图床即储存图片的服务器。</p>
-</blockquote>
-<p>Markdown的本质是对html的解析，于是就存在内置图片的来源问题。在本地编写的md文件，可以插入本地的图片，或者配置远程url。而想讲文章发布到博客给别人看就必须把本地图片上传到图床，再把生成的url复制到文章中（如果图片多，会是一个很耗时耗力的过程）</p>
-<p>==新版Typora，拥有了自动上传的功能==</p>
-<h2 id="操作过程"><a href="#操作过程" class="headerlink" title="操作过程"></a>操作过程</h2><ol>
-<li><p><strong>前置要求</strong></p>
-<ul>
-<li>typora的版本在<code>0.9.86</code>以上</li>
-<li>在<a href="https://sm.ms" target="_blank" rel="noopener">sm.ms</a>上注册账号</li>
-<li>在<a href="https://sm.ms/home/apitoken" target="_blank" rel="noopener">https://sm.ms/home/apitoken</a> 页面生成自己的token</li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/28/5krtWb7qERU4oTJ.png" alt="image-20200628150844856"></p>
-</li>
-<li><p><strong>进入Typora的偏好设置</strong></p>
-<p><img src="https://i.loli.net/2020/06/28/HWfi1qE7ZuUCs56.png" alt="image-20200628153535654"></p>
-<p>依次点击方框中的内容</p>
-</li>
-<li><p><strong>打开配置文件</strong></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"picBed"</span>: &#123;</span><br><span class="line">    <span class="attr">"uploader"</span>: <span class="string">"smms"</span>,  <span class="comment">//代表当前图床配置为smms</span></span><br><span class="line">    <span class="attr">"smms"</span>: &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"你自己的token"</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"picgoPlugins"</span>: &#123;&#125; 	<span class="comment">//预留插件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>保存并退出</p>
-</li>
-<li><p><strong>点击上图的验证图片上传选项</strong></p>
-<p><img src="https://i.loli.net/2020/06/28/RQcjS9DIrg1bzoP.png" alt="image-20200628151242099"></p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/28/%E8%B5%B7%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Albert Cao">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Albert Cao's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/28/%E8%B5%B7%E7%82%B9/" class="post-title-link" itemprop="url">起点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-06-28 15:00:14" itemprop="dateCreated datePublished" datetime="2020-06-28T15:00:14+08:00">2020-06-28</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
