@@ -180,20 +180,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -233,6 +233,84 @@
 
         <div class="content index posts-expand">
           
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/10/Django%E7%B4%A2%E5%BC%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Albert Cao">
+      <meta itemprop="description" content="enjoy coding, enjoy life.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Albert Cao's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/10/Django%E7%B4%A2%E5%BC%95/" class="post-title-link" itemprop="url">Django索引</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-07-10 22:30:34 / Modified: 22:43:41" itemprop="dateCreated datePublished" datetime="2020-07-10T22:30:34+08:00">2020-07-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/django/" itemprop="url" rel="index"><span itemprop="name">django</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Django索引"><a href="#Django索引" class="headerlink" title="Django索引"></a>Django索引</h2><blockquote>
+<p>索引是对列建立的一种数据结构，可以极大的提高数据的查询速度，但是会降低插入、删除、更新表的速度，因为在执行这些写操作时，还要操作文件。</p>
+</blockquote>
+<p>Django通过ORM思想，使开发人员不用面向数据库编程，而是定义模型类，通过对象完成数据库的增删改查操作。ORM的本质是对接数据库引擎，将我们的操作翻译成sql语句。同时实现了数据模型和数据库的解耦，当我们切换数据库的时候，不需要过多操作。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/10/Django%E7%B4%A2%E5%BC%95/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -324,7 +402,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-07-10 17:27:54 / Modified: 17:28:54" itemprop="dateCreated datePublished" datetime="2020-07-10T17:27:54+08:00">2020-07-10</time>
+              <time title="Created: 2020-07-10 17:27:54 / Modified: 22:44:05" itemprop="dateCreated datePublished" datetime="2020-07-10T17:27:54+08:00">2020-07-10</time>
             </span>
 
           
@@ -340,46 +418,14 @@
       
           <h2 id="1-安装Node-js"><a href="#1-安装Node-js" class="headerlink" title="1.安装Node.js"></a>1.安装Node.js</h2><p>官网下载安装即可</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装后查看版本</span></span><br><span class="line">C:\Users\username&gt;node -v</span><br><span class="line">v10.16.3</span><br><span class="line"></span><br><span class="line">C:\Users\username&gt;npm -v</span><br><span class="line">6.14.4</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-配置淘宝cnpm镜像源"><a href="#2-配置淘宝cnpm镜像源" class="headerlink" title="2.配置淘宝cnpm镜像源"></a>2.配置淘宝cnpm镜像源</h2><p><code>npm install -g cnpm --registry==https://registry.npm.taobao.org</code></p>
-<p>再通过<code>cnpm -v</code>查看是否配置成功</p>
-<h2 id="3-安装hexo-cli"><a href="#3-安装hexo-cli" class="headerlink" title="3.安装hexo-cli"></a>3.安装hexo-cli</h2><p><code>cnpm install -g hexo-cli</code></p>
-<p>再通过<code>hexo -v</code>查看是否安装成功</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\username&gt;hexo -v</span><br><span class="line">hexo-cli: 3.1.0</span><br><span class="line">os: Windows_NT 10.0.18362 win32 x64</span><br><span class="line">http_parser: 2.8.0</span><br><span class="line">node: 10.16.3</span><br><span class="line">v8: 6.8.275.32-node.54</span><br><span class="line">uv: 1.28.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.7</span><br><span class="line">ares: 1.15.0</span><br><span class="line">modules: 64</span><br><span class="line">nghttp2: 1.39.2</span><br><span class="line">napi: 4</span><br><span class="line">openssl: 1.1.1c</span><br><span class="line">icu: 64.2</span><br><span class="line">unicode: 12.1</span><br><span class="line">cldr: 35.1</span><br><span class="line">tz: 2019a</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-hexo-init！"><a href="#4-hexo-init！" class="headerlink" title="4.hexo init！"></a>4.hexo init！</h2><p>首先创建一个Myblog文件夹（之后所有相关文件都会在这里，不用的时候直接全部删掉即可）并进入目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">D:\myblog&gt;hexo init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要下载，这里最好翻墙，不然会很慢</span></span><br><span class="line">INFO  Start blogging with Hexo!</span><br><span class="line"></span><br><span class="line"><span class="comment"># 完成后查看文件夹内容</span></span><br><span class="line">D:\myblog&gt;dir</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          .</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          ..</span><br><span class="line">2020/06/28  14:43                71 .gitignore</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          node_modules</span><br><span class="line">2020/06/28  14:43            74,898 package-lock.json</span><br><span class="line">2020/06/28  14:43               602 package.json</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          scaffolds</span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          <span class="built_in">source</span></span><br><span class="line">2020/06/28  14:43    &lt;DIR&gt;          themes</span><br><span class="line">2020/06/28  14:43             2,468 _config.yml  <span class="comment"># 配置文件</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="5-初步使用"><a href="#5-初步使用" class="headerlink" title="5. 初步使用"></a>5. 初步使用</h2><p>启动博客服务器<code>hexo s</code>-&gt; 访问<code>localhost:4000</code>即可看到hexo的初始化页面，默认创建了一篇helloworld文章。（这个命令通常是作为博客写文章后预览使用）</p>
-<p>进入<code>D:\myblog\source\_posts</code>目录即可看到这个文章的markdown文件。</p>
-<p>下面创建自己的第一篇文章<code>hexo n &quot;起点&quot;</code> 此时_posts目录中就生成了一个新的.md文件。然后编辑这个文件即可写文章了。写好保存后，在blog目录运行以下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean	<span class="comment"># 清理数据库</span></span><br><span class="line">hexo g		<span class="comment"># 重新生成静态文件</span></span><br><span class="line">hexo s		<span class="comment"># 重新启动</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="6-部署到Github"><a href="#6-部署到Github" class="headerlink" title="6. 部署到Github"></a>6. 部署到Github</h2><ol>
-<li><p>在github上建立一个新仓库，命名为<code>username.github.io</code>  （必须这样命名！）其他选项默认即可</p>
-</li>
-<li><p>在blog目录中打开命令行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装一个部署插件</span></span><br><span class="line">npm install --save hexo-deployer-git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看以下当前目录下已经安装的npm包</span></span><br><span class="line">npm ls -depth 0</span><br><span class="line">hexo-site@0.0.0 D:\myblog</span><br><span class="line">+-- hexo@4.2.1</span><br><span class="line">+-- hexo-deployer-git@2.1.0</span><br><span class="line">+-- hexo-generator-archive@1.0.0</span><br><span class="line">+-- hexo-generator-category@1.0.0</span><br><span class="line">+-- hexo-generator-index@1.0.0</span><br><span class="line">+-- hexo-generator-tag@1.0.0</span><br><span class="line">+-- hexo-renderer-ejs@1.0.0</span><br><span class="line">+-- hexo-renderer-marked@2.0.0</span><br><span class="line">+-- hexo-renderer-stylus@1.1.0</span><br><span class="line">`-- hexo-server@1.0.0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改配置文件_config.yml</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 找到文件末尾</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">https://github.com/username/username.github.io.git</span></span><br><span class="line">  <span class="comment"># 这里是刚刚生成仓库的地址</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>回到blog下的命令行执行<code>hexo d</code> 即可完成部署</p>
-</li>
-<li><p>访问  <code>username.github.io</code> 测试</p>
-</li>
-</ol>
-<h2 id="7-开始blog之路"><a href="#7-开始blog之路" class="headerlink" title="7. 开始blog之路"></a>7. 开始blog之路</h2><p>以后写新博文时候进行以下操作即可</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hexo n article_name		<span class="comment"># 新建文件（也可以直接将写好的文章放到_posts文件夹中）</span></span><br><span class="line">						<span class="comment"># 对文件的更新和修改也可以在_posts文件夹中直接更改</span></span><br><span class="line">hexo clean		<span class="comment"># 刷新数据库</span></span><br><span class="line">hexo g			<span class="comment"># 重新生成静态文件</span></span><br><span class="line">hexo s			<span class="comment"># 本地测试</span></span><br><span class="line">hexo d			<span class="comment"># 部署到远端</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="8-主题更换"><a href="#8-主题更换" class="headerlink" title="8. 主题更换"></a>8. 主题更换</h2><p>选择了GitHub上star最多的一个主题<code>next</code>，项目地址： <a href="https://github.com/next-theme/hexo-theme-next" target="_blank" rel="noopener">next</a></p>
-<p>在blog目录下，执行<code>D:\myblog&gt;git clone https://github.com/next-theme/hexo-theme-next.git themes/next</code> 便将主题下载到了themes文件夹下</p>
-<p>然后修改<code>_config.yml</code> 文件中的theme为<code>next</code>  再重新部署即可</p>
-<p>主题的配置请参考主题项目的Document</p>
-<h2 id="参考与引用"><a href="#参考与引用" class="headerlink" title="参考与引用"></a>参考与引用</h2><p><a href="http://www.codesheep.cn" target="_blank" rel="noopener">www.codesheep.cn</a></p>
-<p><a href="https://theme-next.js.org/" target="_blank" rel="noopener">https://theme-next.js.org/</a></p>
-<p>有任何问题指出请邮件<a href="mailto:caosp6666@163.com">caosp6666@163.com</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/10/blog%E2%80%94%E2%80%94%E4%BB%8E0%E5%BC%80%E5%A7%8BHexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -423,7 +469,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-07-10 17:25:56 / Modified: 17:28:09" itemprop="dateCreated datePublished" datetime="2020-07-10T17:25:56+08:00">2020-07-10</time>
+              <time title="Created: 2020-07-10 17:25:56 / Modified: 22:44:22" itemprop="dateCreated datePublished" datetime="2020-07-10T17:25:56+08:00">2020-07-10</time>
             </span>
 
           
@@ -442,29 +488,14 @@
 </blockquote>
 <p>Markdown的本质是对html的解析，于是就存在内置图片的来源问题。在本地编写的md文件，可以插入本地的图片，或者配置远程url。而想讲文章发布到博客给别人看就必须把本地图片上传到图床，再把生成的url复制到文章中（如果图片多，会是一个很耗时耗力的过程）</p>
 <p><strong>新版Typora，拥有了自动上传的功能</strong></p>
-<h2 id="操作过程"><a href="#操作过程" class="headerlink" title="操作过程"></a>操作过程</h2><ol>
-<li><p><strong>前置要求</strong></p>
-<ul>
-<li>typora的版本在<code>0.9.86</code>以上</li>
-<li>在<a href="https://sm.ms" target="_blank" rel="noopener">sm.ms</a>上注册账号</li>
-<li>在<a href="https://sm.ms/home/apitoken" target="_blank" rel="noopener">https://sm.ms/home/apitoken</a> 页面生成自己的token</li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/28/5krtWb7qERU4oTJ.png" alt="image-20200628150844856"></p>
-</li>
-<li><p><strong>进入Typora的偏好设置</strong></p>
-<p><img src="https://i.loli.net/2020/06/28/HWfi1qE7ZuUCs56.png" alt="image-20200628153535654"></p>
-<p>依次点击方框中的内容</p>
-</li>
-<li><p><strong>打开配置文件</strong></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"picBed"</span>: &#123;</span><br><span class="line">    <span class="attr">"uploader"</span>: <span class="string">"smms"</span>,  <span class="comment">//代表当前图床配置为smms</span></span><br><span class="line">    <span class="attr">"smms"</span>: &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"你自己的token"</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"picgoPlugins"</span>: &#123;&#125; 	<span class="comment">//预留插件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>保存并退出</p>
-</li>
-<li><p><strong>点击上图的验证图片上传选项</strong></p>
-<p><img src="https://i.loli.net/2020/06/28/RQcjS9DIrg1bzoP.png" alt="image-20200628151242099"></p>
-</li>
-</ol>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/10/blog%E2%80%94%E2%80%94Typora%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -508,7 +539,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-07-10 10:29:40 / Modified: 18:39:26" itemprop="dateCreated datePublished" datetime="2020-07-10T10:29:40+08:00">2020-07-10</time>
+              <time title="Created: 2020-07-10 10:29:40 / Modified: 22:45:11" itemprop="dateCreated datePublished" datetime="2020-07-10T10:29:40+08:00">2020-07-10</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -538,112 +569,14 @@
 <p>集群化的配置和启动更加费劲，在敏捷开发下的迭代中对运维要求过高。</p>
 <p><strong>解决思路：将项目和环境打包，直接部署使用——开发即运维</strong></p>
 <p>Docker的核心思想来自于集装箱，即隔离。通过隔离，Docker可以把服务器性能发挥到极致</p>
-<blockquote>
-<p>Docker与虚拟机</p>
-</blockquote>
-<p>虚拟机：通过软件将计算机的硬件虚拟化，相当于在原电脑的基础上分出来一个新的电脑，很笨重，资源占用多</p>
-<p>Docker容器：也是一种虚拟化技术，只需要最核心的环境，十分小巧，容器没有内核，使用宿主机的内核。每个容器间互相隔离，有自己的文件系统。Docker比虚拟机有更少的抽象层。</p>
-<blockquote>
-<p>Docker</p>
-</blockquote>
-<p>是基于go语言开发的，开源项目。</p>
-<p>官网：<a href="https://www.docker.com/" target="_blank" rel="noopener">https://www.docker.com/</a></p>
-<p>文档：<a href="https://docs.docker.com/" target="_blank" rel="noopener">https://docs.docker.com/</a></p>
-<p>仓库：<a href="https://hub.docker.com/" target="_blank" rel="noopener">https://hub.docker.com/</a></p>
-<blockquote>
-<p>Docker架构</p>
-</blockquote>
-<p><img src="https://i.loli.net/2020/07/08/Bz3QeZbRTMO9DCv.jpg" alt="img"></p>
-<p><strong>镜像（image）</strong>：Docker 镜像（Image），就相当于是一个 root 文件系统。比如官方镜像 ubuntu:16.04 就包含了完整的一套 Ubuntu16.04 最小系统的 root 文件系统。</p>
-<p><strong>容器（container）</strong>：镜像（Image）和容器（Container）的关系，就像是面向对象程序设计中的类和实例一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。</p>
-<p><strong>仓库（repository）</strong>：仓库可看成一个代码控制中心，用来保存镜像。（DockerHub）</p>
-<p>Docker 使用客户端-服务器 (C/S) 架构模式，使用远程API来管理和创建Docker容器。</p>
-<h2 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h2><p>环境准备：</p>
-<ul>
-<li>centos 8 阿里云服务器</li>
-<li>Xshell6</li>
-</ul>
-<p>根据官方文档：</p>
-<ol>
-<li><p>卸载旧的版本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装<code>yum-utils</code>（里面有<code>yum-config-manager</code>）</p>
-<p><code>sudo yum install yum-utils</code></p>
-</li>
-<li><p>配置镜像仓库</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo yum-config-manager \</span></span><br><span class="line">    --add-repo \</span><br><span class="line">    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装docker（当前版本）</p>
-<p><code>sudo yum install docker-ce docker-ce-cli containerd.io</code></p>
-</li>
-<li><p>测试<code>docker run hello-world</code></p>
-</li>
-<li><p>注意！docker需要root来运行</p>
-<p><img src="https://i.loli.net/2020/07/08/WZ8CfENmjTlr5hX.png" alt="image-20200708183832824"></p>
-</li>
-<li><p>卸载的方法：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker-ce docker-ce-cli container.io</span><br><span class="line"></span><br><span class="line">rm -rf /var/lib/docker</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置阿里云镜像加速</p>
-<p><img src="https://i.loli.net/2020/07/08/k7xg8aUY1wur3Cv.png" alt="image-20200708184351132"></p>
-</li>
-</ol>
-<h2 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h2><h3 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h3>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker version  		# 显示版本</span><br><span class="line"></span><br><span class="line">docker info  			# 详细信息</span><br></pre></td></tr></table></figure>
-
-<h3 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h3><ul>
-<li><p>显示镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ ~]# docker images [option]</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">hello-world         latest              bf756fb1ae65        6 months ago        13.3kB</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-q			显示镜像id</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>搜索镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ ~]# docker search mysql</span><br><span class="line">NAME         DESCRIPTION                                     STARS     OFFICIAL    AUTOMATED</span><br><span class="line">mysql        MySQL is a widely used, open-source relation…   9710         [OK]               </span><br><span class="line">mariadb      MariaDB is a community-developed fork of MyS…   3537         [OK]   </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--filter=STARS=3000 筛选star数3000以上的</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>下载镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@ ~]# docker pull java</span><br><span class="line">Using default tag: latest  # 如果不写版本,默认是latest,指定的版本必须是dockerHub中有的</span><br><span class="line">latest: Pulling from library/java</span><br><span class="line">5040bd298390: Pull complete </span><br><span class="line">fce5728aad85: Pull complete # 分层下载,联合文件系统</span><br><span class="line">76610ec20bf5: Pull complete </span><br><span class="line">60170fec2151: Pull complete </span><br><span class="line">e98f73de8f0d: Pull complete </span><br><span class="line">11f7af24ed9c: Pull complete </span><br><span class="line">49e2d6393f32: Pull complete </span><br><span class="line">bb9cdec9c7f3: Pull complete </span><br><span class="line">Digest: sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d  # 签名</span><br><span class="line">Status: Downloaded newer image for java:latest</span><br><span class="line">docker.io/library/java:latest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">docker pull java:版本号</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>删除镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ ~]# docker rmi -f java</span><br><span class="line">删除某一个镜像,使用名字或者id都可以</span><br><span class="line"></span><br><span class="line">[root@ ~]# docker rmi -f $(docker images -aq)</span><br><span class="line"><span class="meta">$</span><span class="bash"> 代表将()中的输出传入这个命令里面</span></span><br><span class="line">这样可以删除现有的所有镜像</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h3><ul>
-<li><p>新建容器并启动</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">docker run [option] image [command]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> option</span></span><br><span class="line">--name=		    容器名字, 如果不指定名字,会自动生成一个</span><br><span class="line">-d				后台方式运行,但是如果没有前台,docker会认为这个后台应用停止了,也会使进程停下</span><br><span class="line">-it				以交互模式进入容器,并创建一个伪输入终端</span><br><span class="line">-p				指定端口</span><br><span class="line">	-p 主机端口:容器端口</span><br><span class="line">	-p 容器端口</span><br><span class="line">-P				随机指定端口</span><br><span class="line">--rm			用完就删掉,默认的容器停止后会保留的</span><br><span class="line">-v				数据卷挂载</span><br><span class="line">	-v 主机目录：容器内目录</span><br><span class="line"></span><br><span class="line">[root@ ~]# docker run -it centos /bin/bash  # 以交互模式启动一个centos,并使用/bin/bash命令</span><br><span class="line">[root@f578f865b1c1 /]# ls</span><br><span class="line">bin  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里的f578f865b1c1就是容器id</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@f578f865b1c1 /]# exit   # 退出</span><br><span class="line">exitch</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看容器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ ~]# docker ps</span><br><span class="line">查看当前运行的</span><br><span class="line">CONTAINER ID   IMAGE    COMMAND       CREATED         STATUS          PORTS     NAMES</span><br><span class="line">41bb23c70380   centos   "/bin/bash"   21 seconds ago  Up 20 seconds             cool_burnell</span><br><span class="line"></span><br><span class="line">[root@ ~]# docker ps -a  </span><br><span class="line">查看所有(包括未运行的)</span><br><span class="line"></span><br><span class="line">-n=num</span><br><span class="line">查看最近创建的num个容器</span><br><span class="line">-q  只显示id</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>删除容器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker rm 容器id							# 删除指定</span><br><span class="line"></span><br><span class="line">docker rm -f $(docker ps -aq)		 	 # 删除所有,如果不加-f就不能删除正在运行的容器</span><br><span class="line">docker ps -aq | xargs docker rm -f		 # 同上</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>退出容器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exit				# 停止并退出</span><br><span class="line">Ctrl + P + Q		# 三个键同时按,转为后台运行</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启动/重启/停止/杀掉</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker start 容器id		# 启动</span><br><span class="line">docker restart 容器id		# 重启</span><br><span class="line">docker stop 容器id		# 停止</span><br><span class="line">docker kill	容器id		# 强制停止</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看容器日志</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker logs [options] 容器id</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> option</span></span><br><span class="line">-f			跟踪日志输出</span><br><span class="line">-t			显示时间戳</span><br><span class="line">--tail		列出最新的几条</span><br><span class="line">--since		从某个时间开始</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看容器内的进程</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker top [options] 容器id</span><br><span class="line">容器运行时不一定有/bin/bash终端来交互执行top命令，而且容器还不一定有top命令，可以使用docker top来实现查看container中正在运行的进程。</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看容器/镜像元数据</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect 容器id/镜像id/镜像name</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>进入当前正在运行的容器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker attach 容器id					# 进入目前的命令行</span><br><span class="line"></span><br><span class="line">docker exec -it 容器id /bin/bash 		# 开启一个新的命令行</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看容器运行状态</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker stats 容器id</span><br><span class="line"></span><br><span class="line">容器id不写就是所有未运行的</span><br><span class="line">-a	查看全部(包括未运行的)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>从容器内copy内容</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 注意:只要容器在数据就在</span></span><br><span class="line">docker cp 容器id:/home/test.py /home</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 也可以反向,记住前面的是源文件即可</span></span><br><span class="line">docker cp /home/test container_id:/home</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h3><p><img src="https://i.loli.net/2020/07/09/5TAQpC49IFu8hUr.png" alt="image-20200709101939919"></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/10/Docker-01-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -693,7 +626,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-10 17:31:02" itemprop="dateModified" datetime="2020-07-10T17:31:02+08:00">2020-07-10</time>
+                <time title="Modified: 2020-07-10 22:44:44" itemprop="dateModified" datetime="2020-07-10T22:44:44+08:00">2020-07-10</time>
               </span>
 
           
@@ -708,21 +641,14 @@
 
       
           <h2 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h2><p>首先在GitHub建立一个new repository</p>
-<p><img src="https://i.loli.net/2020/06/30/odBOKCwhZ758cmL.png" alt="image-20200630095434097"></p>
-<p>新建一个文件夹，在文件夹中右键<code>git bash here</code></p>
-<p>初始化<code>git init</code></p>
-<p>将已有的项目文件复制到这里，然后查看<code>git status</code></p>
-<p><img src="https://i.loli.net/2020/06/30/oNVP9FxS2jvRfiz.png" alt="image-20200630102832010"></p>
-<p>将所有文件添加到git仓库<code>git add .</code></p>
-<p>进行提交<code>git commit -m &quot;first commit&quot;</code></p>
-<p>（插曲：配置Github的SSH登陆）</p>
-<p>将GitHub仓库与本地仓库关联：</p>
-<p><code>git remote add origin https://github.com/caosp6666/Dream-OnlineCourse.git</code></p>
-<p>你新创建的那个仓库里面的README文件不在本地仓库目录中</p>
-<p>通过<code>git pull --rebase origin master</code>进行合并</p>
-<p><img src="https://i.loli.net/2020/06/30/7Ty3WcsufrIqYEw.png" alt="image-20200630104850200"></p>
-<p>再将项目推到远端<code>git push -u origin master</code> （后面的改动不需要-u）</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/30/%E6%96%B0%E6%89%8B%E5%90%91%E2%80%94%E2%80%94%E5%A6%82%E4%BD%95%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E5%8F%91%E5%B8%83%E5%88%B0GitHub/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
