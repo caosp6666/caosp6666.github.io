@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"8.0.0-rc.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="什么是socket是一种进程间通信的方式，于其他进程通信方式不同的是：它能实现不同主机间的进程间通信，网络上的很多服务都是基于socket的（QQ，email等）网络中通过ip:port来确定一个进程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="socket网络编程">
+<meta property="og:url" content="http://yoursite.com/2020/07/11/socket%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Albert Cao&#39;s Blog">
+<meta property="og:description" content="什么是socket是一种进程间通信的方式，于其他进程通信方式不同的是：它能实现不同主机间的进程间通信，网络上的很多服务都是基于socket的（QQ，email等）网络中通过ip:port来确定一个进程">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/07/11/4ZNoaOr5bMi126F.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/11/78UBxVPJIY5ZcKO.png">
+<meta property="article:published_time" content="2020-07-11T13:36:53.000Z">
+<meta property="article:modified_time" content="2020-07-11T13:40:19.451Z">
+<meta property="article:author" content="Albert Cao">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="socket">
+<meta property="article:tag" content="tcp&#x2F;udp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/07/11/4ZNoaOr5bMi126F.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/11/socket%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>socket网络编程 | Albert Cao's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .site-brand-container .toggle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line toggle-line-first"></span>
+        <span class="toggle-line toggle-line-middle"></span>
+        <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Albert Cao's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是socket"><span class="nav-number">1.</span> <span class="nav-text">什么是socket</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket类型"><span class="nav-number">2.</span> <span class="nav-text">socket类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python中创建套接字的过程"><span class="nav-number">3.</span> <span class="nav-text">python中创建套接字的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket建立udp连接过程"><span class="nav-number">4.</span> <span class="nav-text">socket建立udp连接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket建立TCP连接过程"><span class="nav-number">5.</span> <span class="nav-text">socket建立TCP连接过程</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Albert Cao</p>
+  <div class="site-description" itemprop="description">enjoy coding, enjoy life.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/caosp6666" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;caosp6666" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:caosp6666@163.com" title="E-Mail → mailto:caosp6666@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/11/socket%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Albert Cao">
+      <meta itemprop="description" content="enjoy coding, enjoy life.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Albert Cao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          socket网络编程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-07-11 21:36:53 / Modified: 21:40:19" itemprop="dateCreated datePublished" datetime="2020-07-11T21:36:53+08:00">2020-07-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="什么是socket"><a href="#什么是socket" class="headerlink" title="什么是socket"></a>什么是socket</h2><p>是一种进程间通信的方式，于其他进程通信方式不同的是：它能实现不同主机间的进程间通信，网络上的很多服务都是基于socket的（QQ，email等）网络中通过ip:port来确定一个进程</p>
+<a id="more"></a>
+
+<h2 id="socket类型"><a href="#socket类型" class="headerlink" title="socket类型"></a>socket类型</h2><ul>
+<li>SOCK_STREAM：流套接字，用于TCP</li>
+<li>SOCK_DGRAM：数据报套接字，用于UDP</li>
+</ul>
+<h2 id="python中创建套接字的过程"><a href="#python中创建套接字的过程" class="headerlink" title="python中创建套接字的过程"></a>python中创建套接字的过程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment"># tcp</span></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">...</span><br><span class="line">s.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># udp</span></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)</span><br><span class="line">...</span><br><span class="line">s.close()</span><br></pre></td></tr></table></figure>
+
+<p>socket()有两个参数，一个是Address Family（可选AF_INET：网络通信和AF_UNIX：同一台机器进程间通信）一个是Type（即socket类型）</p>
+<h2 id="socket建立udp连接过程"><a href="#socket建立udp连接过程" class="headerlink" title="socket建立udp连接过程"></a>socket建立udp连接过程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">udp_socket = socket(AF_INET, SOCK_DGRAM)          <span class="comment"># create an udp_socket</span></span><br><span class="line">udp_socket.bind((<span class="string">""</span>, <span class="number">2000</span>))                       <span class="comment"># bind ip and port</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># send_message</span></span><br><span class="line">udp_socket.sendto(mesage.encode(<span class="string">'utf-8'</span>), (dest_ip, dest_port))	</span><br><span class="line">                                                  <span class="comment"># tuple('ip',port) ip是字符串</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># recv_message</span></span><br><span class="line">message = udp_socket.recvfrom(<span class="number">1024</span>)               <span class="comment"># return a tuple</span></span><br><span class="line">message[<span class="number">0</span>]是信息流</span><br><span class="line">message[<span class="number">1</span>]是发送方的（ip，port）</span><br><span class="line"></span><br><span class="line">udp_socket.close()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/07/11/4ZNoaOr5bMi126F.png" alt="image-20200711163025412"></p>
+<h2 id="socket建立TCP连接过程"><a href="#socket建立TCP连接过程" class="headerlink" title="socket建立TCP连接过程"></a>socket建立TCP连接过程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># client</span></span><br><span class="line">form socket <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">tcp_client_socket = socket(AF_INET, SOCK_STREAM)				<span class="comment"># create a tcp_socket</span></span><br><span class="line"></span><br><span class="line">tcp_client.connect((server_ip, server_port))					<span class="comment"># 这里是最主要的不同，udp不需要连接</span></span><br><span class="line"></span><br><span class="line">tcp_client_socket.send(<span class="string">'Hello！'</span>.encode(<span class="string">'utf-8'</span>))				<span class="comment"># 连接成功，接发消息</span></span><br><span class="line">recv_data = tcp_client_socket.recv(<span class="number">1024</span>)</span><br><span class="line">print(recv_data.decode(<span class="string">'utf-8'</span>))</span><br><span class="line"></span><br><span class="line">tcp_client_socket.close()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># server</span></span><br><span class="line"><span class="keyword">from</span> socket <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">tcp_server_socket = socket(AF_INET, SOCK_STREAM)</span><br><span class="line"></span><br><span class="line">address = (<span class="string">'ip'</span>, port)</span><br><span class="line"></span><br><span class="line">tcp_server_socket.bind(address)									<span class="comment"># 绑定本机ip和port</span></span><br><span class="line"></span><br><span class="line">tcp_server_socket.listen(<span class="number">128</span>)									<span class="comment"># 开始监听</span></span><br><span class="line"></span><br><span class="line">client_socket, client_address = tcp_server_socket.accept()</span><br><span class="line"></span><br><span class="line">recv_data = client_socket.recv(<span class="number">1024</span>)</span><br><span class="line">print(recv_data.decode(<span class="string">'utf-8'</span>))</span><br><span class="line"></span><br><span class="line">client_socket.send(<span class="string">"hello"</span>.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">client_socket.close()</span><br><span class="line"></span><br><span class="line">tcp_server_socket.close()</span><br></pre></td></tr></table></figure>
+
+<p>注意这里的listen，socket()函数创建的socket默认是一个<strong>主动</strong>类型的，listen函数将socket变为<strong>被动</strong>类型的，等待客户的连接请求。listen中的(backlog)参数，代表可以排队的最大连接数。（见下图）</p>
+<p><img src="https://i.loli.net/2020/07/11/78UBxVPJIY5ZcKO.png" alt="image-20200711165532532"></p>
+<ol>
+<li>client发送SYN到server，将状态修改为SYN_SEND，如果server收到请求，则将状态修改为SYN_RCVD，并把该请求放到syns queue队列中。</li>
+<li>server回复SYN+ACK给client，如果client收到请求，则将状态修改为ESTABLISHED，并发送ACK给server。</li>
+<li>server收到ACK，将状态修改为ESTABLISHED，并把该请求从syns queue中放到accept queue。</li>
+<li>listen中的backlog就是syns queue的最大等待长度。</li>
+</ol>
+<p>accept()返回一个与client建立好连接的socket对象，和一个client的地址tuple。后面通过这个socket进行接发消息，而server_socket再用于跟其他client建立连接。</p>
+<p>当client端调用close后，这个新的socket.recv会解阻塞，返回长度为0，通过这个长度就可以判断是否client下线。如果server想下线就直接关闭这个socket即可。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+              <a href="/tags/socket/" rel="tag"># socket</a>
+              <a href="/tags/tcp-udp/" rel="tag"># tcp/udp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/10/Django%E7%B4%A2%E5%BC%95/" rel="prev" title="Django索引">
+      <i class="fa fa-chevron-left"></i> Django索引
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Albert Cao</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
