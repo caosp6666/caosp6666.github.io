@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"8.0.0-rc.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="全网搜索引擎（baidu &#x2F; google）的宏观架构 spider + index + rank  特点：写入与读取分离 写入流程：输入是通过spider建立互联网全网镜像，保存成一个巨大的网页库。然后index对网页库进行分词，排序，输出是倒排索引。 检索流程：输入用户的搜索词，对搜索词进行分词，根据倒排索引，找到每个分词的结果（一个包含url_id的集合），然后对所有的集合求交集。最后对这个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搜索引擎架构与检索需求方案演进">
+<meta property="og:url" content="http://yoursite.com/2020/07/13/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%A3%80%E7%B4%A2%E9%9C%80%E6%B1%82%E6%96%B9%E6%A1%88%E6%BC%94%E8%BF%9B/index.html">
+<meta property="og:site_name" content="Albert Cao&#39;s Blog">
+<meta property="og:description" content="全网搜索引擎（baidu &#x2F; google）的宏观架构 spider + index + rank  特点：写入与读取分离 写入流程：输入是通过spider建立互联网全网镜像，保存成一个巨大的网页库。然后index对网页库进行分词，排序，输出是倒排索引。 检索流程：输入用户的搜索词，对搜索词进行分词，根据倒排索引，找到每个分词的结果（一个包含url_id的集合），然后对所有的集合求交集。最后对这个">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/DITN1c4F7y6nQHs.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/j8FAVog3nCc7vOH.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/HUQa475dwLXhpks.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/r52otQwON3IVz79.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/oJiWVXl7xzRcgj8.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/ctZQal81O5pkw9W.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/M2FOzuJIlcEr9ko.png">
+<meta property="article:published_time" content="2020-07-13T08:36:18.000Z">
+<meta property="article:modified_time" content="2020-07-13T08:37:58.795Z">
+<meta property="article:author" content="Albert Cao">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="search">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/07/13/DITN1c4F7y6nQHs.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/13/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%A3%80%E7%B4%A2%E9%9C%80%E6%B1%82%E6%96%B9%E6%A1%88%E6%BC%94%E8%BF%9B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>搜索引擎架构与检索需求方案演进 | Albert Cao's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .site-brand-container .toggle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line toggle-line-first"></span>
+        <span class="toggle-line toggle-line-middle"></span>
+        <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Albert Cao's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#全网搜索引擎（baidu-google）的宏观架构"><span class="nav-number">1.</span> <span class="nav-text">全网搜索引擎（baidu &#x2F; google）的宏观架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#站内搜索引擎（数据量和吞吐量大）"><span class="nav-number">2.</span> <span class="nav-text">站内搜索引擎（数据量和吞吐量大）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实时搜索的两个核心"><span class="nav-number">3.</span> <span class="nav-text">实时搜索的两个核心</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#索引分级"><span class="nav-number">3.1.</span> <span class="nav-text">索引分级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dump-amp-merge"><span class="nav-number">3.2.</span> <span class="nav-text">dump &amp; merge</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微观架构中的检索过程"><span class="nav-number">4.</span> <span class="nav-text">微观架构中的检索过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分词（word-segmentation）"><span class="nav-number">4.1.</span> <span class="nav-text">分词（word segmentation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正排索引（forward-index）"><span class="nav-number">4.2.</span> <span class="nav-text">正排索引（forward index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#倒排索引（inverted-index）"><span class="nav-number">4.3.</span> <span class="nav-text">倒排索引（inverted index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#交集（过程中最费时的）"><span class="nav-number">4.4.</span> <span class="nav-text">交集（过程中最费时的）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不同数据量阶段的检索方案"><span class="nav-number">5.</span> <span class="nav-text">不同数据量阶段的检索方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段一：LIKE"><span class="nav-number">5.1.</span> <span class="nav-text">阶段一：LIKE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段二：全文索引"><span class="nav-number">5.2.</span> <span class="nav-text">阶段二：全文索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段三：使用开源搜索框架-elasticsearch-lucene-solr"><span class="nav-number">5.3.</span> <span class="nav-text">阶段三：使用开源搜索框架 elasticsearch &#x2F; lucene &#x2F; solr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段四：自研引擎（百亿级数据量且高并发）"><span class="nav-number">5.4.</span> <span class="nav-text">阶段四：自研引擎（百亿级数据量且高并发）</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Albert Cao</p>
+  <div class="site-description" itemprop="description">enjoy coding, enjoy life.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/caosp6666" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;caosp6666" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:caosp6666@163.com" title="E-Mail → mailto:caosp6666@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/13/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%A3%80%E7%B4%A2%E9%9C%80%E6%B1%82%E6%96%B9%E6%A1%88%E6%BC%94%E8%BF%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Albert Cao">
+      <meta itemprop="description" content="enjoy coding, enjoy life.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Albert Cao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          搜索引擎架构与检索需求方案演进
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-07-13 16:36:18 / Modified: 16:37:58" itemprop="dateCreated datePublished" datetime="2020-07-13T16:36:18+08:00">2020-07-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9E%B6%E6%9E%84%E5%B8%88%E4%B9%8B%E8%B7%AF/" itemprop="url" rel="index"><span itemprop="name">架构师之路</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="全网搜索引擎（baidu-google）的宏观架构"><a href="#全网搜索引擎（baidu-google）的宏观架构" class="headerlink" title="全网搜索引擎（baidu / google）的宏观架构"></a>全网搜索引擎（baidu / google）的宏观架构</h2><blockquote>
+<p>spider + index + rank</p>
+</blockquote>
+<p>特点：写入与读取分离</p>
+<p>写入流程：<strong>输入</strong>是通过spider建立互联网全网镜像，保存成一个巨大的网页库。然后index对网页库进行分词，排序，<strong>输出</strong>是倒排索引。</p>
+<p>检索流程：<strong>输入</strong>用户的搜索词，对搜索词进行分词，根据倒排索引，找到每个分词的结果（一个包含url_id的集合），然后对所有的集合求交集。最后对这个交集利用rank系统进行排序，将排序后的结果<strong>输出</strong>。</p>
+<a id="more"></a>
+
+<p><img src="https://i.loli.net/2020/07/13/DITN1c4F7y6nQHs.png" alt="image-20200713162802136"></p>
+<p>其中spider和index是偏向工程的系统，而rank是业务、策略、算法相关的系统。</p>
+<p><strong>一个搜索引擎的体验主要体现在rank系统</strong></p>
+<p>rank系统：常见的有google的page rank算法，百度的超链分析算法等。一个网页的质量并不是由网页本身决定的，而是由其他网页对它的引用决定的（类似于论文的引用）。而这个计算网页之间互相引用的算法工程量和难度是十分大的。</p>
+<p>百度的显示是根据每次<code>点击价格*点击数</code>计算的排名，并不是出价排名。因此点击数预测是很关键的。</p>
+<h2 id="站内搜索引擎（数据量和吞吐量大）"><a href="#站内搜索引擎（数据量和吞吐量大）" class="headerlink" title="站内搜索引擎（数据量和吞吐量大）"></a>站内搜索引擎（数据量和吞吐量大）</h2><blockquote>
+<p>index + rank</p>
+</blockquote>
+<p>与全网搜索引擎的区别就是不需要spider。站内生成新的内容以后推送给index生成索引即可。</p>
+<p><img src="https://i.loli.net/2020/07/13/j8FAVog3nCc7vOH.png" alt="image-20200713162538534"></p>
+<p>虽然全网搜索和站内搜索差距看似很小，但是实现难度差很多。主要难点是全网搜索引擎如何实时的获取所有消息。</p>
+<h2 id="实时搜索的两个核心"><a href="#实时搜索的两个核心" class="headerlink" title="实时搜索的两个核心"></a>实时搜索的两个核心</h2><blockquote>
+<p>当吞吐量很大的时候，为了保证倒排索引的效率，索引是不会被实时修改的（es是实时修改的，因此无法满足那种特别大的吞吐量）因此想保证索引的实时性就有了索引分级系统和merge策略。</p>
+</blockquote>
+<h3 id="索引分级"><a href="#索引分级" class="headerlink" title="索引分级"></a>索引分级</h3><p>将索引分为，全量索引（十亿），天级索引（千万级数据），小时索引（百万以下数据）（或者其他的划分方法）当写入数据的时候，只写入小时索引中。读的时候，从每一个级别的索引中都读，给出综合的结果。</p>
+<h3 id="dump-amp-merge"><a href="#dump-amp-merge" class="headerlink" title="dump &amp; merge"></a>dump &amp; merge</h3><p>将数据异步的导出、合并</p>
+<p><img src="https://i.loli.net/2020/07/13/HUQa475dwLXhpks.png" alt="image-20200713142934500"></p>
+<p>merge的时候会不会影响read的速度？怎么解决？</p>
+<p>通过数据冗余，同时存在多份数据，在merge的时候用没有在merge的那个数据。merge完毕在切换。一份一份地进行merge。而实际上这个过程中，未检索到的数据对用户是没有感受的。</p>
+<h2 id="微观架构中的检索过程"><a href="#微观架构中的检索过程" class="headerlink" title="微观架构中的检索过程"></a>微观架构中的检索过程</h2><p><img src="https://i.loli.net/2020/07/13/r52otQwON3IVz79.png" alt="image-20200713150658666"></p>
+<h3 id="分词（word-segmentation）"><a href="#分词（word-segmentation）" class="headerlink" title="分词（word segmentation）"></a>分词（word segmentation）</h3><h3 id="正排索引（forward-index）"><a href="#正排索引（forward-index）" class="headerlink" title="正排索引（forward index）"></a>正排索引（forward index）</h3><p>例如网页库中的Map&lt;url, page_content&gt;，这就是正排索引。或者数据库中user表，通过uid查询整行的过程就是正排索引。因为是map，我们可以认为时间复杂度是O(1)级别的。</p>
+<h3 id="倒排索引（inverted-index）"><a href="#倒排索引（inverted-index）" class="headerlink" title="倒排索引（inverted index）"></a>倒排索引（inverted index）</h3><p>当我们把内容分词以后，将不同文章的相同item找到，建立一个Map&lt;item, list(url)&gt;，这就是倒排索引。是一个能快速的找到包含找个查询词的网页的数据结构。这个速度也可以认为是O(1)的。</p>
+<p>举例：</p>
+<ul>
+<li><p>正排索引就是从url到分词list的映射</p>
+</li>
+<li><p>url1:”我爱北京” —分词—&gt; [“我”, “爱” , “北京”]</p>
+</li>
+<li><p>url2:”我爱天安门” —分词—&gt; [“我”, “爱”, “天安门”]</p>
+</li>
+<li><p>url3:”我觉得天安门很好看” —分词—&gt; [“我”, “觉得”, “天安门”, “很”, “好看”]</p>
+</li>
+<li><p>倒排索引就是词到包含这个词的url list的映射</p>
+</li>
+<li><p>“我”-&gt; [url1, url2, url3]</p>
+</li>
+<li><p>“爱”-&gt; [url1, url2]</p>
+</li>
+<li><p>“北京”-&gt; [url1]</p>
+</li>
+<li><p>“天安门”-&gt; [url2, url3]</p>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+<h3 id="交集（过程中最费时的）"><a href="#交集（过程中最费时的）" class="headerlink" title="交集（过程中最费时的）"></a>交集（过程中最费时的）</h3><p>字符型的url不利于保存，一般用url_id来保存。那么问题就转化成两个list中求相同元素。</p>
+<ul>
+<li><p>方法一：两遍for循环。<strong>时间复杂度O(n平方)</strong></p>
+</li>
+<li><p>方法二：对倒排索引的保存进行排序，然后用拉链法求两个有序数组的交集。<strong>时间复杂度O(n)</strong></p>
+</li>
+<li><p>方法三：根据数据范围分桶（水平切分），计算子集合的交集，再做并集。利用了多线程。</p>
+</li>
+<li><p>方法四：分桶以后，每个集合都有一个范围，因此可以使用bitmap进行优化，交集就是两个bitmap进行与操作后为1的位就是结果。这样理论的<strong>时间复杂度仍然是O(n)</strong>，但是缩短了存储空间，与操作也更快。</p>
+</li>
+<li><p>方法五：跳表（skiplist）实际的求交集过程是一个十分稀疏的链表（比如十亿个url中有200个url和300个url求交集）可以迅速的跳过一些元素。跳表相当于一个树形结构，<strong>时间复杂度近似认为是O(logn)</strong></p>
+<p><img src="https://i.loli.net/2020/07/13/oJiWVXl7xzRcgj8.png" alt="image-20200713152154392"></p>
+</li>
+</ul>
+<h2 id="不同数据量阶段的检索方案"><a href="#不同数据量阶段的检索方案" class="headerlink" title="不同数据量阶段的检索方案"></a>不同数据量阶段的检索方案</h2><blockquote>
+<p>原则：早期出现业务瓶颈的时候，一定是用最快速的方法去解决需求，而不是用最好的（复杂）</p>
+</blockquote>
+<h3 id="阶段一：LIKE"><a href="#阶段一：LIKE" class="headerlink" title="阶段一：LIKE"></a>阶段一：LIKE</h3><p>数据库中的保存是这样的：t_tiezi(tid, title, content)</p>
+<p><code>select tid from t_tiezi where content like &#39;%天通苑%&#39;</code></p>
+<p>like的效率很低，每一次都要全表扫描。只能用在数据量小，吞吐量小的情况，而且不支持分词。</p>
+<h3 id="阶段二：全文索引"><a href="#阶段二：全文索引" class="headerlink" title="阶段二：全文索引"></a>阶段二：全文索引</h3><p>基于数据库建立全文索引来进行优化，应用层不需要很多修改。</p>
+<p><code>alter table t_tiezi add fulltext(title, content)</code></p>
+<p>问题是：搜索功能与其他CRUD功能耦合，但数据量超过百万，搜索会很慢，影响正常的数据库功能。</p>
+<h3 id="阶段三：使用开源搜索框架-elasticsearch-lucene-solr"><a href="#阶段三：使用开源搜索框架-elasticsearch-lucene-solr" class="headerlink" title="阶段三：使用开源搜索框架 elasticsearch / lucene / solr"></a>阶段三：使用开源搜索框架 elasticsearch / lucene / solr</h3><p>核心思路是将索引和原始数据分离，索引外置。达到搜索和其他功能的解耦。</p>
+<p>索引外置以后就有数据一致性的问题（全网搜索引擎中的数据一致性并不重要），需要通过定期的索引重建，保证两边数据的一致性。</p>
+<p>在这个阶段，大多数情况的业务都能满足要求（亿级数据量）</p>
+<h3 id="阶段四：自研引擎（百亿级数据量且高并发）"><a href="#阶段四：自研引擎（百亿级数据量且高并发）" class="headerlink" title="阶段四：自研引擎（百亿级数据量且高并发）"></a>阶段四：自研引擎（百亿级数据量且高并发）</h3><p>设计上必须考虑能够支持无限容量和无限并发（即，具有很强的扩展性，增加机器就能增加并发量）</p>
+<p><img src="https://i.loli.net/2020/07/13/ctZQal81O5pkw9W.png" alt="image-20200713161925075"></p>
+<p>searcher层的机器通常会提前把索引加载到内存中，来达到在内存中查找的过程。</p>
+<hr>
+<p>声明：以上是来自（微信公众号：架构师之路）沈剑老师的直播笔记，如有侵权会立即删除</p>
+<p>课程推广二维码：</p>
+<p><img src="https://i.loli.net/2020/07/13/M2FOzuJIlcEr9ko.png" alt="image-20200713163514271"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+              <a href="/tags/search/" rel="tag"># search</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/11/socket%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="prev" title="socket网络编程">
+      <i class="fa fa-chevron-left"></i> socket网络编程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Albert Cao</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
