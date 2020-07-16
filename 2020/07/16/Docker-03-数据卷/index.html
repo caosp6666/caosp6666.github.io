@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"8.0.0-rc.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="如果数据在容器中，是十分不合理的，一旦容器删除，所有数据都会丢失。因此，运行容器的时候需要将数据保存到宿主机上，同时，如果多个文件绑定了同一个目录，可以实现文件的共享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker-03-数据卷">
+<meta property="og:url" content="http://yoursite.com/2020/07/16/Docker-03-%E6%95%B0%E6%8D%AE%E5%8D%B7/index.html">
+<meta property="og:site_name" content="Albert Cao&#39;s Blog">
+<meta property="og:description" content="如果数据在容器中，是十分不合理的，一旦容器删除，所有数据都会丢失。因此，运行容器的时候需要将数据保存到宿主机上，同时，如果多个文件绑定了同一个目录，可以实现文件的共享">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/07/09/m8x69NGMjWT4ylH.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/09/7bzo2ndQwOIgeXS.png">
+<meta property="article:published_time" content="2020-07-16T06:33:31.000Z">
+<meta property="article:modified_time" content="2020-07-16T07:01:18.246Z">
+<meta property="article:author" content="Albert Cao">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/07/09/m8x69NGMjWT4ylH.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/16/Docker-03-%E6%95%B0%E6%8D%AE%E5%8D%B7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Docker-03-数据卷 | Albert Cao's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .site-brand-container .toggle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line toggle-line-first"></span>
+        <span class="toggle-line toggle-line-middle"></span>
+        <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Albert Cao's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据卷的使用"><span class="nav-number">1.</span> <span class="nav-text">数据卷的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直接使用命令挂载："><span class="nav-number">1.1.</span> <span class="nav-text">直接使用命令挂载：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用DockerFile在创建的时候就挂载好"><span class="nav-number">1.2.</span> <span class="nav-text">使用DockerFile在创建的时候就挂载好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除无主的数据卷"><span class="nav-number">1.3.</span> <span class="nav-text">删除无主的数据卷</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具名挂载和匿名挂载"><span class="nav-number">2.</span> <span class="nav-text">具名挂载和匿名挂载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器之间的数据同步"><span class="nav-number">3.</span> <span class="nav-text">容器之间的数据同步</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Albert Cao</p>
+  <div class="site-description" itemprop="description">enjoy coding, enjoy life.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/caosp6666" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;caosp6666" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:caosp6666@163.com" title="E-Mail → mailto:caosp6666@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/16/Docker-03-%E6%95%B0%E6%8D%AE%E5%8D%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Albert Cao">
+      <meta itemprop="description" content="enjoy coding, enjoy life.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Albert Cao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker-03-数据卷
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-07-16 14:33:31 / Modified: 15:01:18" itemprop="dateCreated datePublished" datetime="2020-07-16T14:33:31+08:00">2020-07-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>如果数据在容器中，是十分不合理的，一旦容器删除，所有数据都会丢失。因此，运行容器的时候需要将数据保存到宿主机上，同时，如果多个文件绑定了同一个目录，可以实现文件的共享</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="数据卷的使用"><a href="#数据卷的使用" class="headerlink" title="数据卷的使用"></a>数据卷的使用</h2><h3 id="直接使用命令挂载："><a href="#直接使用命令挂载：" class="headerlink" title="直接使用命令挂载："></a>直接使用命令挂载：</h3><p>使用<code>-v</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将本机的/home/<span class="built_in">test</span>目录与容器内的/home目录同步</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 通过inspect可以查看挂载的信息</span></span><br><span class="line"></span><br><span class="line">[root@ ~]# docker run -it -v /home/test:/home centos_plus:1.0 </span><br><span class="line"></span><br><span class="line">[root@ ~]# docker inspect 8fd6a4b2b0d9</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/07/09/m8x69NGMjWT4ylH.png" alt="image-20200709145600459"></p>
+<p><strong>此时，在容器中的/home目录创建文件，主机中的/home/test目录中会生成该文件，反向也可以</strong></p>
+<p>==会占用两倍的存储！==</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-v /home/test:/home:ro  # 只读</span><br><span class="line">-v /home/test:/home:rw	# 可读可写</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>--mount</code>挂载</p>
+<p>区别是<code>-v</code>可以新建目录，而<code>--mount</code>如果没有目录会报错</p>
+<p>可以设置readonly选项，这样如果对容器内的目录进行写入会报错，只能通过主机的目录操作更改容器内的文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -P \</span><br><span class="line">    --name web \</span><br><span class="line">    # -v /src/webapp:/opt/webapp:ro \</span><br><span class="line">    --mount type=bind,source=/src/webapp,target=/opt/webapp,readonly \</span><br><span class="line">    training/webapp \</span><br><span class="line">    python app.py</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用DockerFile在创建的时候就挂载好"><a href="#使用DockerFile在创建的时候就挂载好" class="headerlink" title="使用DockerFile在创建的时候就挂载好"></a>使用DockerFile在创建的时候就挂载好</h3><p><code>VOLUMU [&quot;volume1&quot;, &quot;volume2&quot;]</code>  （匿名挂载）</p>
+<p>运行这个镜像的时候就会自动挂载</p>
+<h3 id="删除无主的数据卷"><a href="#删除无主的数据卷" class="headerlink" title="删除无主的数据卷"></a>删除无主的数据卷</h3><p><code>docker volume prune</code></p>
+<h2 id="具名挂载和匿名挂载"><a href="#具名挂载和匿名挂载" class="headerlink" title="具名挂载和匿名挂载"></a>具名挂载和匿名挂载</h2><ul>
+<li><p>匿名挂载</p>
+<p><code>docker run -d -P --name nginx -v /etc/nginx nginx</code></p>
+<p>只指定了容器内的目录，没有指定容器外的目录。</p>
+<p><img src="https://i.loli.net/2020/07/09/7bzo2ndQwOIgeXS.png" alt="image-20200709213834096"></p>
+<p>可以看到，匿名的卷挂载到docker/volumes/随机生成的序列号/_data</p>
+</li>
+<li><p>具名挂载（给数据卷起个名字）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ ~]# docker run -d -P --name nginx02 -v nginx2data:/etc/nginx nginx</span><br><span class="line">06ca357e2648688ff09f247a22459ee33e1890d62f94edfc5514eb4f2fc7bd7d</span><br><span class="line">[root@ ~]# docker volume ls</span><br><span class="line">DRIVER              VOLUME NAME</span><br><span class="line">local               38c22f6d57ca9299c2799139d3714917150ad34e1811240667476c54ca9a5d29</span><br><span class="line">local               nginx2data</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@ ~]# docker volume inspect nginx2data </span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        "CreatedAt": "2020-07-09T21:42:26+08:00",</span><br><span class="line">        "Driver": "local",</span><br><span class="line">        "Labels": null,</span><br><span class="line">        "Mountpoint": "/var/lib/docker/volumes/nginx2data/_data",</span><br><span class="line">        "Name": "nginx2data",</span><br><span class="line">        "Options": null,</span><br><span class="line">        "Scope": "local"</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="容器之间的数据同步"><a href="#容器之间的数据同步" class="headerlink" title="容器之间的数据同步"></a>容器之间的数据同步</h2><ol>
+<li>创建容器1<code>[root@ ~]# docker run -it --name centos1 -v v1:/volume01 centos_plus:1.0 /bin/bash</code></li>
+<li>创建容器2挂载容器1<code>[root@ ~]# docker run -it --name centos2 --volumes-from f184d593e65f centos_plus:1.0 /bin/bash</code></li>
+<li>通过<code>--volumes-from</code>将容器2和容器1同步挂载，这时在容器1创建文件，容器2中可以查看到</li>
+<li>如果容器1退出，容器2的文件不会受到影响，因为实际上容器2是挂载到主机的，主机的volume也不受到影响。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"># docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/16/Docker-02-%E9%95%9C%E5%83%8F%E7%9A%84%E5%8E%9F%E7%90%86/" rel="prev" title="Docker-02-镜像的原理">
+      <i class="fa fa-chevron-left"></i> Docker-02-镜像的原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/16/Docker-04-Dockerfile%E6%9E%84%E5%BB%BA%E4%B8%8E%E5%8F%91%E5%B8%83/" rel="next" title="Docker-04-Dockerfile构建与发布">
+      Docker-04-Dockerfile构建与发布 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Albert Cao</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
