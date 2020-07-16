@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"8.0.0-rc.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Django索引 索引是对列建立的一种数据结构，可以极大的提高数据的查询速度，但是会降低插入、删除、更新表的速度，因为在执行这些写操作时，还要操作文件。  Django通过ORM思想，使开发人员不用面向数据库编程，而是定义模型类，通过对象完成数据库的增删改查操作。ORM的本质是对接数据库引擎，将我们的操作翻译成sql语句。同时实现了数据模型和数据库的解耦，当我们切换数据库的时候，不需要过多操作。">
+  <meta name="description" content="SQL注入危害：  非法读取、篡改、删除数据库中的数据 盗取用户敏感信息 通过修改数据库来修改网页上的内容 注入木马">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Django索引">
-<meta property="og:url" content="http://yoursite.com/2020/07/10/Django%E7%B4%A2%E5%BC%95/index.html">
+<meta property="og:title" content="常见网络攻击与Djangoo的防御">
+<meta property="og:url" content="http://yoursite.com/2020/07/16/%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E4%B8%8EDjangoo%E7%9A%84%E9%98%B2%E5%BE%A1/index.html">
 <meta property="og:site_name" content="Albert Cao&#39;s Blog">
-<meta property="og:description" content="Django索引 索引是对列建立的一种数据结构，可以极大的提高数据的查询速度，但是会降低插入、删除、更新表的速度，因为在执行这些写操作时，还要操作文件。  Django通过ORM思想，使开发人员不用面向数据库编程，而是定义模型类，通过对象完成数据库的增删改查操作。ORM的本质是对接数据库引擎，将我们的操作翻译成sql语句。同时实现了数据模型和数据库的解耦，当我们切换数据库的时候，不需要过多操作。">
+<meta property="og:description" content="SQL注入危害：  非法读取、篡改、删除数据库中的数据 盗取用户敏感信息 通过修改数据库来修改网页上的内容 注入木马">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-07-10T14:30:34.000Z">
-<meta property="article:modified_time" content="2020-07-10T14:43:41.981Z">
+<meta property="article:published_time" content="2020-07-16T06:16:01.000Z">
+<meta property="article:modified_time" content="2020-07-16T06:18:52.753Z">
 <meta property="article:author" content="Albert Cao">
-<meta property="article:tag" content="django">
+<meta property="article:tag" content="Django">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2020/07/10/Django%E7%B4%A2%E5%BC%95/">
+<link rel="canonical" href="http://yoursite.com/2020/07/16/%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E4%B8%8EDjangoo%E7%9A%84%E9%98%B2%E5%BE%A1/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>Django索引 | Albert Cao's Blog</title>
+  <title>常见网络攻击与Djangoo的防御 | Albert Cao's Blog</title>
   
 
 
@@ -168,7 +168,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Django索引"><span class="nav-number">1.</span> <span class="nav-text">Django索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Django索引原则："><span class="nav-number">1.1.</span> <span class="nav-text">Django索引原则：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手动添加索引"><span class="nav-number">1.2.</span> <span class="nav-text">手动添加索引</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL注入"><span class="nav-number">1.</span> <span class="nav-text">SQL注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XSS"><span class="nav-number">2.</span> <span class="nav-text">XSS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Csrf"><span class="nav-number">3.</span> <span class="nav-text">Csrf</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -240,7 +240,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/10/Django%E7%B4%A2%E5%BC%95/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/16/%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E4%B8%8EDjangoo%E7%9A%84%E9%98%B2%E5%BE%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -253,7 +253,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Django索引
+          常见网络攻击与Djangoo的防御
         </h1>
 
         <div class="post-meta">
@@ -264,16 +264,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-07-10 22:30:34 / Modified: 22:43:41" itemprop="dateCreated datePublished" datetime="2020-07-10T22:30:34+08:00">2020-07-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/django/" itemprop="url" rel="index"><span itemprop="name">django</span></a>
-                </span>
+              <time title="Created: 2020-07-16 14:16:01 / Modified: 14:18:52" itemprop="dateCreated datePublished" datetime="2020-07-16T14:16:01+08:00">2020-07-16</time>
             </span>
 
           
@@ -287,32 +278,54 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Django索引"><a href="#Django索引" class="headerlink" title="Django索引"></a>Django索引</h2><blockquote>
-<p>索引是对列建立的一种数据结构，可以极大的提高数据的查询速度，但是会降低插入、删除、更新表的速度，因为在执行这些写操作时，还要操作文件。</p>
-</blockquote>
-<p>Django通过ORM思想，使开发人员不用面向数据库编程，而是定义模型类，通过对象完成数据库的增删改查操作。ORM的本质是对接数据库引擎，将我们的操作翻译成sql语句。同时实现了数据模型和数据库的解耦，当我们切换数据库的时候，不需要过多操作。</p>
+        <h2 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h2><p>危害：</p>
+<ul>
+<li>非法读取、篡改、删除数据库中的数据</li>
+<li>盗取用户敏感信息</li>
+<li>通过修改数据库来修改网页上的内容</li>
+<li>注入木马</li>
+</ul>
 <a id="more"></a>
 
-<h3 id="Django索引原则："><a href="#Django索引原则：" class="headerlink" title="Django索引原则："></a>Django索引原则：</h3><ul>
-<li><p>django会默认给所有主键（id）添加索引</p>
-</li>
-<li><p>django会默认给每个外键添加索引</p>
-<p>那为什么要给外键添加索引呢？在外键中，往往设置了对另一个表的删除操作，对外键的索引可以更快地找到这些有关联的值，使操作变快。</p>
-</li>
-</ul>
-<h3 id="手动添加索引"><a href="#手动添加索引" class="headerlink" title="手动添加索引"></a>手动添加索引</h3><ul>
-<li><p>设置<code>db_index=True</code>：这样可以给当前声明的字段在数据库中添加一个索引，当以这个字段进行get或者filter的时候速度就会加快。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PressureSensor</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    store = models.ForeignKey(Store, verbose_name=<span class="string">'门店ID'</span>, on_delete=models.CASCADE)</span><br><span class="line">    barcode = models.CharField(verbose_name=<span class="string">'货架码'</span>, max_length=<span class="number">12</span>, db_index=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置<code>index_together</code>：即对user和fav这两个字段建立一个联合索引，同时查询的时候会加快速度。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Meta</span>：</span></span><br><span class="line">	index_together = ["user", "fav"]</span><br></pre></td></tr></table></figure>
+<p>代码演示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> MySQLdb</span><br><span class="line"></span><br><span class="line">conn = MySQLdb.connect(...)</span><br><span class="line"></span><br><span class="line">cursor = conn.cursor()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 正常查找</span></span><br><span class="line"><span class="comment"># username = "admin"</span></span><br><span class="line"><span class="comment"># password = "pbkdf2_sha256$xxxxxxxxxxxxxxxxxxxxxxxx"</span></span><br><span class="line"><span class="comment"># 此时sql = select * from users_userprofile where username='admin' and password='pbkdf2_sha256$xxxxxxxxxxxxxxxxxxxxxxxx'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sql注入</span></span><br><span class="line">username = <span class="string">"' or 1=1 #"</span></span><br><span class="line">password = <span class="string">""</span></span><br><span class="line"><span class="comment"># 此时sql = select * from users_userprofile where username='' or 1=1 #' and password=''</span></span><br><span class="line"></span><br><span class="line">sql = <span class="string">"select * from users_userprofile where username='&#123;&#125;' and password='&#123;&#125;'"</span>.format(username, password)</span><br><span class="line"></span><br><span class="line">cursor.execute(sql)</span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> cursor.fetchall():</span><br><span class="line">    print(row)</span><br></pre></td></tr></table></figure>
 
-<p>一般这种情况下，还要加一个限制<code>unique_together</code>，将这两个字段作为联合主键</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">    unique_together = [<span class="string">"user"</span>, <span class="string">"fav"</span>]</span><br></pre></td></tr></table></figure>
-
-<p>这样就保证了这两个字段的值是唯一的，即同一个用户只能收藏一个商品，不能收藏多次，数据库中不会出现另外一对这两个值同样的一条数据。</p>
-</li>
+<p>防范：</p>
+<ul>
+<li>表单验证</li>
+<li>django的ORM会对特殊字符转义</li>
 </ul>
+<h2 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h2><p>XSS跨站脚本攻击（Cross Site Scripting）因为缩写和CSS重复，所以写为XSS</p>
+<p>危害：</p>
+<ul>
+<li>盗取账号</li>
+<li>非法转账</li>
+<li>注入木马</li>
+</ul>
+<p>攻击流程：</p>
+<p>假设用户访问<code>http://www.shop.com/product/list?name=&#39;iphone&#39;</code>后，返回的页面有一个位置要显示这个信息（例如搜索框）这时如果不对name进行检查，就会出现漏洞。黑客可以在name=中添加一个js代码。形成一个新的url发给用户<code>http://www.shop.com/product/list?name=&lt;script&gt; ...send cookie to hack&#39;s server...&lt;/script&gt;</code>因为域名是属于shop的，用户信任并访问了。将cookie发给了黑客，黑客就可以用这个session id冒充用户。</p>
+<p>防护：</p>
+<ul>
+<li>配置cookie的http only属性</li>
+<li>将cookie和ip绑定</li>
+<li>对可生成脚本运行的字符进行转义</li>
+<li>尽量通过post来发送表单，而不是get</li>
+</ul>
+<h2 id="Csrf"><a href="#Csrf" class="headerlink" title="Csrf"></a>Csrf</h2><p>csrf跨站请求伪造cross-site request forgery</p>
+<p>危害：</p>
+<ul>
+<li>以伪造者身份发送邮件</li>
+<li>盗取账号</li>
+<li>购买商品</li>
+<li>虚假转账</li>
+</ul>
+<p>原理：</p>
+<p>用户登陆正规服务器（比如银行），服务器给用户返回一个session id。此时用户在浏览器新开了一个标签，访问黑客服务器，黑客可以在网页中添加这样一个标签<code>&lt;img src=http://www.bank.com/transfer/toid=badman&amp;money=1000&gt;</code></p>
+<p>这里用户的浏览器会自动向bank发送请求，而且他是不知情的。由于用户已经有了session id，该访问被bank视为正常的用户请求。钱就转给badman了。</p>
+<p>黑客也可以通过form表单让用户向bank发送post请求，这是极危险的。</p>
+<p>Django如何防护：</p>
+<p>在form表单中添加csrf_token验证。使得整个表单只能来自服务器，黑客无法生成这个token。</p>
+<p>在django自己的template中添加csrf_token</p>
 
     </div>
 
@@ -322,7 +335,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/django/" rel="tag"># django</a>
+              <a href="/tags/Django/" rel="tag"># Django</a>
           </div>
 
         
@@ -331,13 +344,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/07/10/blog%E2%80%94%E2%80%94%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E7%9A%84%E8%AE%B0%E5%BD%95/" rel="prev" title="blog——一些问题的记录">
-      <i class="fa fa-chevron-left"></i> blog——一些问题的记录
+    <a href="/2020/07/13/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%A3%80%E7%B4%A2%E9%9C%80%E6%B1%82%E6%96%B9%E6%A1%88%E6%BC%94%E8%BF%9B/" rel="prev" title="搜索引擎架构与检索需求方案演进">
+      <i class="fa fa-chevron-left"></i> 搜索引擎架构与检索需求方案演进
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/07/11/socket%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="next" title="socket网络编程">
-      socket网络编程 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
