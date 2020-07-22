@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"8.0.0-rc.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="hexo不支持&#x3D;&#x3D;的高亮 hexo不支持[toc]">
+  <meta name="description" content="GIL锁深入探究 GIL(Global Interpreter Lock) 全局解释器锁。主要存在于Cpython解释器中，与python语言本身没有关系。GIL由线程持有，保证同一时刻只有一个线程能使用到cpu。目的是解决多线程同时竞争程序中的全局变量而出现的线程安全问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="blog——一些问题的记录">
-<meta property="og:url" content="http://yoursite.com/2020/07/10/blog%E2%80%94%E2%80%94%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E7%9A%84%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="GIL锁的深入理解">
+<meta property="og:url" content="http://yoursite.com/2020/07/22/GIL%E9%94%81%E7%9A%84%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3/index.html">
 <meta property="og:site_name" content="Albert Cao&#39;s Blog">
-<meta property="og:description" content="hexo不支持&#x3D;&#x3D;的高亮 hexo不支持[toc]">
+<meta property="og:description" content="GIL锁深入探究 GIL(Global Interpreter Lock) 全局解释器锁。主要存在于Cpython解释器中，与python语言本身没有关系。GIL由线程持有，保证同一时刻只有一个线程能使用到cpu。目的是解决多线程同时竞争程序中的全局变量而出现的线程安全问题。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-07-10T09:29:16.000Z">
-<meta property="article:modified_time" content="2020-07-10T09:30:10.587Z">
+<meta property="article:published_time" content="2020-07-22T09:35:05.000Z">
+<meta property="article:modified_time" content="2020-07-22T09:35:51.975Z">
 <meta property="article:author" content="Albert Cao">
-<meta property="article:tag" content="blog">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2020/07/10/blog%E2%80%94%E2%80%94%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E7%9A%84%E8%AE%B0%E5%BD%95/">
+<link rel="canonical" href="http://yoursite.com/2020/07/22/GIL%E9%94%81%E7%9A%84%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>blog——一些问题的记录 | Albert Cao's Blog</title>
+  <title>GIL锁的深入理解 | Albert Cao's Blog</title>
   
 
 
@@ -156,7 +156,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -168,6 +168,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GIL锁深入探究"><span class="nav-number">1.</span> <span class="nav-text">GIL锁深入探究</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -239,7 +240,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/10/blog%E2%80%94%E2%80%94%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E7%9A%84%E8%AE%B0%E5%BD%95/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/22/GIL%E9%94%81%E7%9A%84%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -252,7 +253,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          blog——一些问题的记录
+          GIL锁的深入理解
         </h1>
 
         <div class="post-meta">
@@ -263,7 +264,16 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-07-10 17:29:16 / Modified: 17:30:10" itemprop="dateCreated datePublished" datetime="2020-07-10T17:29:16+08:00">2020-07-10</time>
+              <time title="Created: 2020-07-22 17:35:05 / Modified: 17:35:51" itemprop="dateCreated datePublished" datetime="2020-07-22T17:35:05+08:00">2020-07-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
             </span>
 
           
@@ -277,10 +287,29 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <ul>
-<li>hexo不支持==的高亮</li>
-<li>hexo不支持[toc]</li>
+        <h2 id="GIL锁深入探究"><a href="#GIL锁深入探究" class="headerlink" title="GIL锁深入探究"></a>GIL锁深入探究</h2><blockquote>
+<p>GIL(Global Interpreter Lock) 全局解释器锁。主要存在于Cpython解释器中，与python语言本身没有关系。GIL由线程持有，保证同一时刻只有一个线程能使用到cpu。目的是解决多线程同时竞争程序中的全局变量而出现的线程安全问题。</p>
+</blockquote>
+<a id="more"></a>
+
+<p>我们都知道有这样一个锁，但是这个锁的作用我们很难感受到。主要有两个原因：</p>
+<ul>
+<li>I/O密集型程序：python的多线程爬虫比单线程性能有提升，是因为遇到I/O阻塞的时候会释放GIL锁，I/O的时间远大于其他的计算，因此这里成功利用了CPU资源，虽然有提升，但仍然是利用了单核资源。</li>
+<li>计算密集型程序：线程锁不是一直锁住的，而是每过一段时间就会放开这个锁，让其他线程一起抢这个锁，这个过程是随机的，因此宏观上看，这些线程还是“并行”的。其实多线程会将时间浪费在上下文切换，导致速度变慢，又没法利用多核，反而没有单线程的计算快。</li>
 </ul>
+<p>解决方法是：使用其他解释器或者使用多进程/协程</p>
+<hr>
+<p>上面提到GIL锁的释放时间，就是check interval。我们可以通过<code>sys.getcheckinterval()</code>来查看，默认是100</p>
+<p>如何在单机上体现出来这个锁的问题呢？</p>
+<p>设计一个程序，让两个线程进行CPU计算密集型操作，通过<code>sys.setswitchinterval(2)</code>把这个切换的间隔设为2秒</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mythread</span><span class="params">(threading.Thread)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(self.name + <span class="string">' say hello at '</span> + str(time.time()))</span><br><span class="line">        a = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            a += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># print(sys.getcheckinterval())</span></span><br><span class="line">    sys.setswitchinterval(<span class="number">2</span>)</span><br><span class="line">    t = Mythread()</span><br><span class="line">    t.start()</span><br><span class="line"></span><br><span class="line">    t2 = Mythread()</span><br><span class="line">    t2.start()</span><br><span class="line"></span><br><span class="line">    t3 = Mythread()</span><br><span class="line">    t3.start()</span><br></pre></td></tr></table></figure>
+
+<p>查看结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当不修改的时候：</span></span><br><span class="line">Thread<span class="number">-1</span> say hello at <span class="number">1595409187.5879657</span></span><br><span class="line">Thread<span class="number">-2</span> say hello at <span class="number">1595409187.5929716</span></span><br><span class="line">Thread<span class="number">-3</span> say hello at <span class="number">1595409187.6109514</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当修改了以后：</span></span><br><span class="line">Thread<span class="number">-1</span> say hello at <span class="number">1595409151.9933445</span></span><br><span class="line">Thread<span class="number">-2</span> say hello at <span class="number">1595409153.9951756</span></span><br><span class="line">Thread<span class="number">-3</span> say hello at <span class="number">1595409163.9994202</span></span><br></pre></td></tr></table></figure>
+
+<p>可见，在不修改切换时间的时候，三个线程在很短的时间内就都得到了执行，也就是产生了宏观上的并行，而调整切换时间以后，Thread-1独占了CPU2秒的时间，然后Thread-2才开始运行。Thread-3在10秒以后才抢到GIL锁（运气有点不好）</p>
 
     </div>
 
@@ -290,7 +319,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/blog/" rel="tag"># blog</a>
+              <a href="/tags/python/" rel="tag"># python</a>
           </div>
 
         
@@ -299,13 +328,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/07/10/blog%E2%80%94%E2%80%94%E4%BB%8E0%E5%BC%80%E5%A7%8BHexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="prev" title="blog——从0开始Hexo博客搭建">
-      <i class="fa fa-chevron-left"></i> blog——从0开始Hexo博客搭建
+    <a href="/2020/07/17/git/" rel="prev" title="git">
+      <i class="fa fa-chevron-left"></i> git
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/07/10/Django%E7%B4%A2%E5%BC%95/" rel="next" title="Django索引">
-      Django索引 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
